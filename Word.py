@@ -2,8 +2,6 @@
 import numpy as np
 import PtBase
 import PtAudio
-import matplotlib.pyplot as plt
-
 
 u""" klasa przedstawiajaca slowo, slowo podawane w konstruktorze jest zapisywane w zmiennej __word
 do zamiany na fonemy sluzy slownik __dictionaryF, kazdy fonem jest zapisany jako oddzielny string
@@ -27,10 +25,17 @@ class Word(object):
         self.__dzwieczne = ['b', 'm', 'w', 'd', 'dz', 'z', 'n', 'zi', 'ni', 'drz', 'rz', 'r', 'g', 'a', 'an', 'o', 'e',
                             'en', 'y', 'i', 'u']
         self.__bezdzwieczne = ['p', 'f', 't', 'c', 's', 'cz', 'sz', 'si', 'k', 'h']
+        self.__dz_bdz = {"b": "p", "dz": "c", "drz": "cz", "d": "t", "w": "f", "g": "k", "z": "s", "zi": "si",
+                         "rz": "sz", "dzi": "ci"}
+        self.__bdz_dz = {"p": "b", "c": "dz", "cz": "drz", "t": "d", "k": "g", "s": "z", "si": "zi", "ci": "dzi",
+                         "f": "f", "sz": "sz"}
         self.__zwarteM = ['b', 'p']
         self.__zwarteN = ['t', 'd', 'c']
         self.__szczelinowe = ['v', 'w', 'f', 'z', 's', 'rz', 'sz', 'zi', 'si', 'ch']
         self.__samogloski = ['a', 'an', 'e', 'en', 'i', 'o', 'u', 'y']
+        self.__spolgloski_nie_nosowe = ["b", "d", "g", "dz", "dzi", "drz", "p", "t", "k", "cz", "c", "ci", "w", "z",
+                                        "zi", "rz", "f", "s", "si", "sz"]
+        u"""w spółgłoskach nienosowych nie ma zawartego h, ponieważ nie ma swojego dźwięcznego odpowiednika"""
 
     def display_word(self):
         print self.__word
@@ -43,13 +48,13 @@ class Word(object):
 
     def phenom(self):
         k = 0
-        word1 = self.__word + "o" # prywatny patent! :D o na koncu nie tworzy zadnego dwuznaku,
-                                # powoduje dodanie ramki dzieki czemu nie trzeba bawić sie z
-                                # dzieki temu mozemy w ifie iterowac po calym slowie, czyli do jego dlugosci
+        word1 = self.__word + "o"   u""" prywatny patent! :D o na koncu nie tworzy zadnego dwuznaku,
+                                 powoduje dodanie ramki dzieki czemu nie trzeba bawić sie z
+                                 dzieki temu mozemy w ifie iterowac po calym slowie, czyli do jego dlugosci"""
 
         for j in range(len(self.__word)):
             if k < (len(self.__word)):
-                x = word1[k]+word1[k+1]
+                x = word1[k] + word1[k+1]
                 if x == 'ch' or x == 'cz' or x == 'dz' or x == u'dż' or x == u'dź' or x == 'rz' or x == 'sz':
                     a = self.__dictionaryF[x]
                     self.__tableF.append(a)
@@ -57,7 +62,7 @@ class Word(object):
                 else:
                     a = self.__dictionaryF[self.__word[k]]
                     self.__tableF.append(a)
-            k=k+1
+            k += 1
 
     def syllable_with_i(self):
         # print len(self.__tableF)
@@ -70,21 +75,21 @@ class Word(object):
                     self.__tableF[i] = 'j'
 
     def upodobnienia_postepowe(self):
-        __tab=list(self.__tableF)
+        __tab = list(self.__tableF)
 
         flag1 = 'rz' in __tab
         flag2 = 'w' in __tab
 
-        while flag1 == True:
+        while flag1:
             idx = __tab.index("rz")
             if idx > 0:
                 if __tab[idx-1] in self.__bezdzwieczne:
                     print("zamieniam rz na sz!")
                     self.__tableF[idx] = 'sz'
-            __tab[idx] =" x"
+            __tab[idx] = " x"
             flag1 = "rz" in __tab
 
-        while flag2 == True:
+        while flag2:
             idx = __tab.index("w")
             if idx > 0:
                  if __tab[idx-1] in self.__bezdzwieczne:
@@ -96,16 +101,24 @@ class Word(object):
         print self.__tableF
 
     def upodobnienia_wsteczne(self):
-        return 0
-    # Zdefiniować!!!!
+        i = len(self.__tableF)
+        iterator = i-1
+        while iterator > 0:
+            if self.__tableF[i] in self.__dzwieczne:
+                if self.__tableF[i-1] in self.__bezdzwieczne:
+                    self.__tableF[i-1] = self.__bdz_dz[self.__tableF[i-1]]
+            if self.__tableF[i] in self.__dzwieczne:
+                if self.__tableF[i-1] in self.__bezdzwieczne:
+                    self.__tableF[i-1] = self.__dz_bdz[self.__tableF[i-1]]
+            iterator -= 1
+            i -= 1
 
     def zmien_dzwiecznnosc(self):
-        __dz_bdz = {"b": "p", "dz": "c", "drz": "cz", "d": "t", "w": "f", "g": "k", "z": "s", "zi": "si", "rz": "sz"}
         __dz = ['b', 'dz', 'drz', 'd', 'w', 'g', 'z', 'zi', 'rz']
         length = len(self.__tableF)
         letter = self.__tableF[length-1]
         if letter in __dz:
-            self.__tableF[length-1] = __dz_bdz[letter]
+            self.__tableF[length-1] = self.__dz_bdz[letter]
 
     def change_to_diphone_word(self):
         letter = self.__tableF[0]
@@ -115,11 +128,11 @@ class Word(object):
             self.__tableD.append(self.__tableF[i]+"+"+self.__tableF[i+1])
         self.__tableD.append(self.__tableF[length-1]+"+_")
 
-#Metody Karla
-#Poniżej wklej swoje metody
+# Metody Karla
+# Poniżej wklej swoje metody
 
     def denezalization(self):
-    #denezalizacja czyli obsluga koncowek typu ela, al, e
+    # denezalizacja czyli obsluga koncowek typu ela, al, e
          for i in range(len(self.__tableF)):
           if self.__tableF[i] == "en" and i != len(self.__tableF)-1 :
              if self.__tableF[i+1] == "ll":
@@ -153,8 +166,8 @@ class Word(object):
       elif "c" in self.__tableF:
         for i in range(len(self.__tableF)):
             if self.__tableF[i]== "c":
-                if self.__tableF[i+1]== "i":
-                    self.__tableF[i]= "ci"
+                if self.__tableF[i+1] == "i":
+                    self.__tableF[i] = "ci"
       elif "s" in self.__tableF:
         for i in range(len(self.__tableF)):
           if self.__tableF[i] == "s":
@@ -162,17 +175,17 @@ class Word(object):
                 self.__tableF[i] = "si"
 
     def double_i_on_end(self):
-    #obsluga podwojnego i na koncu wyrazu
+    # obsluga podwojnego i na koncu wyrazu
         if self.__tableF[len(self.__tableF)-1] == "i" and self.__tableF[len(self.__tableF)-2] == "i":
          self.__tableF.pop()
 
-#Metody Mateusza
-#Poniżej wklej swoje metody
+# Metody Mateusza
+# Poniżej wklej swoje metody
     def asynchronous_pronunciation_nasal(self):
         __tab=list(self.__tableF)
         ann = "an" in __tab
         enn = "en" in __tab
-        while ann==True:
+        while ann:
             idx_an = __tab.index("an")
             if idx_an > 0 and idx_an < len(__tab)-1:
                 if __tab[idx_an+1] in self.__zwarteM:
@@ -186,7 +199,7 @@ class Word(object):
                 self.__tableF.append('ll')
             __tab[idx_an] = "x"
             ann = "an" in __tab
-        while enn == True:
+        while enn:
             idx_en = __tab.index("en")
             if idx_en > 0 and idx_en < len(__tab)-1:
                 if __tab[idx_en+1] in self.__zwarteM:
@@ -201,10 +214,10 @@ class Word(object):
             enn = "en" in __tab
 
     def synchronous_pronunciation_nasal(self):
-        __tab=list(self.__tableF)
+        __tab = list(self.__tableF)
         ann = "an" in __tab
         enn = "en" in __tab
-        while ann == True:
+        while ann:
             idx_an = __tab.index("an")
             if idx_an > 0 and idx_an < len(__tab)-1:
                 if __tab[idx_an+1] in self.__szczelinowe:
@@ -215,7 +228,7 @@ class Word(object):
             __tab[idx_an] = "x"
             ann = "an" in __tab
 
-        while enn == True:
+        while enn:
             idx_en = __tab.index("en")
             if idx_en > 0 and idx_en < len(__tab)-1:
                 if __tab[idx_en+1] in self.__zwarteM:
@@ -225,11 +238,11 @@ class Word(object):
             __tab[idx_en] = "x"
             enn = "en" in __tab
 
-#synteza, proste sklejanie wersja bardzo wstepna
+# synteza, proste sklejanie wersja bardzo wstepna
 
     def complete_diphones(self):
-    #metoda tworząca difony w przypadku ich braku, np gdy nie ma difonu o+t tworzy o+_, _+t
-    #na sztywno wpisane reguly w przypadku gdy nie mozna stworzyc difonu, np z+_ zamieniane jest na _+z, tak samo dla w
+    # metoda tworząca difony w przypadku ich braku, np gdy nie ma difonu o+t tworzy o+_, _+t
+    # na sztywno wpisane reguly w przypadku gdy nie mozna stworzyc difonu, np z+_ zamieniane jest na _+z, tak samo dla w
        diphonelist = open('confdata/diphonelist.txt',"r")
        availablediphones = diphonelist.readlines()
        diphonelist.close()
@@ -238,7 +251,7 @@ class Word(object):
            availablediphones[x] = availablediphones[x].rstrip('\n')
 
        for aa in range(len(self.__tableD)):
-        while (self.__tableD[aa] in availablediphones)==False:
+        while (self.__tableD[aa] in availablediphones) == False :
          for i in range(len(self.__tableD)):
           if self.__tableD[i] == 'z+_':
              self.__tableD[i] = '_+z'
@@ -249,20 +262,20 @@ class Word(object):
           if (self.__tableD[i] in availablediphones) == False:
              print "Brak difonu " + self.__tableD[i] + " w bazie, uzupelniam"
 
-             tempword = self.__tableD[i]
+             temp_word = self.__tableD[i]
              pindex = self.__tableD[i].index("+")
-             if tempword[0] == "_" and len(tempword) > 3:
-                newdiphone = ['_+' + tempword[pindex+1], tempword[pindex+2:len(tempword)] + "+."]
-             elif tempword[len(tempword)-1] == "_":
-                newdiphone = [tempword[0] + '+.', '_+' + tempword[1]]
-             elif tempword[len(tempword) - 1] == ".":
-                 newdiphone = [tempword[0] + '+.', '_+' + tempword[1]]
+             if temp_word[0] == "_" and len(temp_word) > 3:
+                new_diphone = ['_+' + temp_word[pindex+1], temp_word[pindex+2:len(temp_word)] + "+."]
+             elif temp_word[len(temp_word)-1] == "_":
+                new_diphone = [temp_word[0] + '+.', '_+' + temp_word[1]]
+             elif temp_word[len(temp_word) - 1] == ".":
+                 new_diphone = [temp_word[0] + '+.', '_+' + temp_word[1]]
              else:
-                newdiphone = [tempword[0:pindex] + '+.', '_+'+tempword[pindex+1:len(tempword)]]
-             print newdiphone
-             self.__tableD.insert(i,newdiphone[0])
-             self.__tableD.insert(i+1, newdiphone[1])
-             self.__tableD.remove(tempword)
+                new_diphone = [temp_word[0:pindex] + '+.', '_+'+temp_word[pindex+1:len(temp_word)]]
+             print new_diphone
+             self.__tableD.insert(i,new_diphone[0])
+             self.__tableD.insert(i+1, new_diphone[1])
+             self.__tableD.remove(temp_word)
 
     def text_to_speech(self):
         length = len(self.__tableD)
@@ -270,8 +283,8 @@ class Word(object):
         for i in range(length):
             x = PtBase.DiphonBase.db[self.__tableD[i]].wav
             wave = np.append(wave, x)
-        Px = PtAudio.Play(0)
-        Px.run(wave)
+        px = PtAudio.Play(0)
+        px.run(wave)
 
     def create_table_diphone(self):
         wrd.display_word()
@@ -282,17 +295,13 @@ class Word(object):
         wrd.syllable_with_i()
         wrd.upodobnienia_postepowe()
         wrd.display_phenom()
-        #print "Tutaj zaczynaja sie metodki Matiego."
         wrd.asynchronous_pronunciation_nasal()
         wrd.display_phenom()
         wrd.synchronous_pronunciation_nasal()
         wrd.display_phenom()
-        #print "A teraz Karolek!"
-        #wrd.softless()
+        wrd.softless()
         wrd.denezalization()
-        #zamiana na difony
         wrd.change_to_diphone_word()
-        # print "a teraz difony- ciekawe czy dziala :)"
         wrd.display_diphone()
         wrd.complete_diphones()
 
@@ -300,4 +309,3 @@ class Word(object):
 wrd = Word('chrząszczbrzmiwtrzciniewszczebrzeszynie')
 wrd.create_table_diphone()
 wrd.text_to_speech()
-
