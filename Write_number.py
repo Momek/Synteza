@@ -58,4 +58,4 @@ class WriteNumber(object):
 # nm = WriteNumber('321')
 # nm.how_is_number()
 # c = nm.write_hunderds()
-print c
+# print c
