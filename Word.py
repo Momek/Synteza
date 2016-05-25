@@ -21,7 +21,7 @@ class Word(object):
                               u'ł': 'll', 'm': 'm', 'n': 'n', u'ń': 'ni', 'o': 'o', u'ó': 'u', 'p': 'p', 'r': 'r',
                               'rz': 'rz', 's': 's', u'ś': 'si', 't': 't', 'u': 'u', 'w': 'w', 'y': 'y',
                               'z': 'z', u'ź': 'zi', u'ż': 'rz', 'dz': 'dz', 'drz': 'drz', u'dż': 'drz', u'dź': 'dzi',
-                              'cz': 'cz', 'sz': 'sz'}
+                              'cz': 'cz', 'sz': 'sz', '.': '.', '_': '_'}
         self.__dzwieczne = ['b', 'm', 'w', 'd', 'dz', 'z', 'n', 'zi', 'ni', 'drz', 'rz', 'r', 'g', 'a', 'an', 'o', 'e',
                             'en', 'y', 'i', 'u']
         self.__bezdzwieczne = ['p', 'f', 't', 'c', 's', 'cz', 'sz', 'si', 'k', 'h']
