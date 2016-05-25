@@ -54,6 +54,15 @@ class WriteNumber(object):
         n123 = n3 + " " + n12
         return n123
 
+    def write_number(self, nm):
+        nm.how_is_number()
+        if self.i == 0:
+            return nm.write_units()
+        elif self.i == 1:
+            return nm.write_tens()
+        elif self.i == 2:
+            return nm.write_hunderds()
+
 
 # nm = WriteNumber('321')
 # nm.how_is_number()
