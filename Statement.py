@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
-import Write_number as wr
+import WriteNumber as wr
 
 
 class Statement(object):
@@ -10,7 +10,7 @@ class Statement(object):
         self.__normalized_statment = " "
         self.__tokenStatment = []
         self.__tokenWords = []
-        # self.number = wr.WriteNumber()
+        self.__flag_number = True
 
     def display_statment(self):
         print self.__statemnt
@@ -21,10 +21,7 @@ class Statement(object):
     def normalized_statment(self):
         self.__normalized_statment = self.__statemnt
         self.__normalized_statment = self.__normalized_statment.lower()
-        flag_number = self.__normalized_statment.isalpha()
-        if flag_number is False:
-            print " "
-            # dopisac metode
+        self.__flag_number = self.__normalized_statment.isalpha()
 
     @staticmethod
     def write_number(num):
@@ -53,14 +50,25 @@ class Statement(object):
             j = 0
         print self.__tokenWords
 
+    def number_to_word(self):
+        if not self.__flag_number:
+            j = 1;
+            while j <= len(self.__tokenWords):
+                if not self.__tokenWords[j].isalpha():
+                    number = wr.WriteNumber(self.__tokenWords[j])
+                    self.__tokenWords[j] = number.write_number(number)
+                j += 1
 
-st = Statement("Ala ma 2.0 kota. I temperatura wynosi 27.988 stopni. Ala ma kocury 2, ale też 3 psy.")
+
+st = Statement("Ala ma 2 kota. I temperatura wynosi 27 stopni. Ala ma kocury 2, ale też 3 psy.")
 # wyswietl wprowadzona wypowiedz
 st.display_statment()
 # normalizacja
 st.normalized_statment()
-st.display_normalized_statment()
+# st.display_normalized_statment()
 # podziel wypowiedz na zdania
 st.statement_tokenize_to_sentence()
 # podziel zdania na slowa
 st.sentence_tokenize_to_words()
+# jesli wystepuja liczby to zamien je na slowa
+st.number_to_word()
