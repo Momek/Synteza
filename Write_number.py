@@ -19,14 +19,6 @@ class WriteNumber(object):
         self.__result = ""
         self.i = 0
 
-    def how_is_number(self):
-        k = self.__num
-        while k > 0:
-            self.number.append(k % 10)
-            k /= 10
-            self.i += 1
-        print self.i
-
     def write_units(self):
         n = self.number[0]
         m = str(n)
@@ -38,6 +30,7 @@ class WriteNumber(object):
 
         if n_t == '1':
             self.__result = self.__dictionaryT1[n_u]
+            return self.__dictionaryT1[n_u]
         else:
             if n_u == 0:
                 return self.__dictionaryT[n_t]
@@ -54,17 +47,16 @@ class WriteNumber(object):
         n123 = n3 + " " + n12
         return n123
 
-    def write_number(self, nm):
-        nm.how_is_number()
-        if self.i == 0:
-            return nm.write_units()
-        elif self.i == 1:
-            return nm.write_tens()
-        elif self.i == 2:
-            return nm.write_hunderds()
+    def how_is_number(self):
+        k = self.__num
+        while k > 0:
+            self.number.append(k % 10)
+            k /= 10
+            self.i += 1
+        return self.i
 
 
-# nm = WriteNumber('321')
+# nm = WriteNumber('22')
 # nm.how_is_number()
-# c = nm.write_hunderds()
+# c = nm.write_tens()
 # print c
