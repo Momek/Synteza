@@ -6,13 +6,12 @@ import WriteNumber as wr
 class Statement(object):
     def __init__(self, statement):
         self.__statemnt = statement
-        # dokonczyc co potrzeba
         self.__normalized_statment = " "
         self.__tokenStatment = []
         self.__tokenWords = []
         self.__flag_number = True
 
-    def display_statment(self):
+    def display_statement(self):
         print self.__statemnt
 
     def display_normalized_statment(self):
@@ -22,47 +21,50 @@ class Statement(object):
         self.__normalized_statment = self.__statemnt
         self.__normalized_statment = self.__normalized_statment.lower()
         self.__flag_number = self.__normalized_statment.isalpha()
-
-    @staticmethod
-    def write_number(num):
-        k = num
-        i = 0
-        number = []
-        while k > 0:
-            number.append(k % 10)
-            k /= 10
-            i += 1
-        print number
+        print self.__flag_number
 
     def statement_tokenize_to_sentence(self):
-        self.__tokenStatment = re.split("\.[^0-9]", self.__statemnt)
-        print self.__tokenStatment
+        self.__tokenStatment = re.split("(\.[^0-9]|,|\.$)", self.__normalized_statment)
 
     def sentence_tokenize_to_words(self):
         i = 0
         j = 0
-        while i < len(self.__tokenStatment):
+
+        while i<len(self.__tokenStatment):
             temp = re.split(" ", self.__tokenStatment[i])
-            while j < len(temp):
-                self.__tokenWords.append(temp[j])
-                j += 1
-            i += 1
-            j = 0
+            while j<len(temp):
+                if len(temp[j]) > 0:
+                    self.__tokenWords.append(temp[j])
+                j+=1
+            i+=1
+            j=0
         print self.__tokenWords
 
+
     def number_to_word(self):
+
         if not self.__flag_number:
-            j = 1;
-            while j <= len(self.__tokenWords):
+            j = 0;
+            # temp = re.split(" ", self.__tokenStatment[i])
+            while j < len(self.__tokenWords):
                 if not self.__tokenWords[j].isalpha():
-                    number = wr.WriteNumber(self.__tokenWords[j])
-                    self.__tokenWords[j] = number.write_number(number)
+                    num = self.__tokenWords[j]
+                    if num[0] in {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}:
+                        number = wr.WriteNumber(str(num))
+                        k = number.how_is_number()
+                        if k == 1:
+                            self.__tokenWords[j] = number.write_units()
+                        elif k == 2:
+                            self.__tokenWords[j] = number.write_tens()
+                        elif k == 3:
+                            self.__tokenWords[j] = number.write_hunderds()
+                print self.__tokenWords[j]
                 j += 1
 
 
-st = Statement("Ala ma 2 kota. I temperatura wynosi 27 stopni. Ala ma kocury 2, ale też 3 psy.")
+st = Statement("Ala ma 12 też.")
 # wyswietl wprowadzona wypowiedz
-st.display_statment()
+st.display_statement()
 # normalizacja
 st.normalized_statment()
 # st.display_normalized_statment()
