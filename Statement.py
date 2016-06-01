@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+# -*- encoding: utf-8 -*-
 import re
 import WriteNumber as wr
+import Word as word
 
 
 class Statement(object):
@@ -9,8 +11,9 @@ class Statement(object):
         self.__normalized_statment = " "
         self.__tokenStatment = []
         self.__tokenWords = []
-        self.__f_word = " "
+        self.__p_word = " "
         self.__flag_number = True
+
 
     def display_statement(self):
         print self.__statemnt
@@ -35,7 +38,7 @@ class Statement(object):
             temp = re.split(" ", self.__tokenStatment[i])
             while j < len(temp):
                 if len(temp[j]) > 0:
-                    self.__tokenWords.append(temp[j])
+                    self.__tokenWords.append(unicode(temp[j], 'utf-8', 'ignore'))
                 j += 1
             i += 1
             j = 0
@@ -59,17 +62,38 @@ class Statement(object):
                 # print self.__tokenWords[j]
                 j += 1
 
-    def word_to_periodic_word(self):
+    def words_to_prosodic_word(self):
         i = 1;
-        self.__f_word=self.__tokenWords[0]
-        print self.__f_word
+        self.__p_word = self.__tokenWords[0]
+        # print self.__p_word
         while i < len(self.__tokenWords):
-            self.__f_word += self.__tokenWords[i]
-            print self.__f_word
+            self.__p_word += self.__tokenWords[i]
+            # print self.__p_word
             i += 1
 
+    def text_to_speach(self):
+        prosodic_word = word.Word(self.__p_word)
+        prosodic_word.display_word()
+        prosodic_word.phenom()
+        prosodic_word.display_phenom()
+        prosodic_word.double_i_on_end()
+        prosodic_word.zmien_dzwiecznnosc()
+        prosodic_word.syllable_with_i()
+        prosodic_word.upodobnienia_postepowe()
+        prosodic_word.display_phenom()
+        prosodic_word.asynchronous_pronunciation_nasal()
+        prosodic_word.display_phenom()
+        prosodic_word.synchronous_pronunciation_nasal()
+        prosodic_word.display_phenom()
+        prosodic_word.softless()
+        prosodic_word.denezalization()
+        prosodic_word.change_to_diphone_word()
+        prosodic_word.display_diphone()
+        prosodic_word.complete_diphones()
+        prosodic_word.text_to_speech()
 
-st = Statement("Ala ma 12 też. A ja mam 5 kóz")
+
+st = Statement("Idzie Grześ Przez wieś Worek piasku niesie ")
 # wyswietl wprowadzona wypowiedz
 st.display_statement()
 # normalizacja
@@ -81,4 +105,5 @@ st.statement_tokenize_to_sentence()
 st.sentence_tokenize_to_words()
 # jesli wystepuja liczby to zamien je na slowa
 st.number_to_word()
-st.word_to_periodic_word()
+st.words_to_prosodic_word()
+st.text_to_speach()
