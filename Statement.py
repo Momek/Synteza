@@ -9,6 +9,7 @@ class Statement(object):
         self.__normalized_statment = " "
         self.__tokenStatment = []
         self.__tokenWords = []
+        self.__f_word = " "
         self.__flag_number = True
 
     def display_statement(self):
@@ -30,22 +31,19 @@ class Statement(object):
         i = 0
         j = 0
 
-        while i<len(self.__tokenStatment):
+        while i < len(self.__tokenStatment):
             temp = re.split(" ", self.__tokenStatment[i])
-            while j<len(temp):
+            while j < len(temp):
                 if len(temp[j]) > 0:
                     self.__tokenWords.append(temp[j])
-                j+=1
-            i+=1
-            j=0
+                j += 1
+            i += 1
+            j = 0
         print self.__tokenWords
 
-
     def number_to_word(self):
-
         if not self.__flag_number:
             j = 0;
-            # temp = re.split(" ", self.__tokenStatment[i])
             while j < len(self.__tokenWords):
                 if not self.__tokenWords[j].isalpha():
                     num = self.__tokenWords[j]
@@ -58,11 +56,20 @@ class Statement(object):
                             self.__tokenWords[j] = number.write_tens()
                         elif k == 3:
                             self.__tokenWords[j] = number.write_hunderds()
-                print self.__tokenWords[j]
+                # print self.__tokenWords[j]
                 j += 1
 
+    def word_to_periodic_word(self):
+        i = 1;
+        self.__f_word=self.__tokenWords[0]
+        print self.__f_word
+        while i < len(self.__tokenWords):
+            self.__f_word += self.__tokenWords[i]
+            print self.__f_word
+            i += 1
 
-st = Statement("Ala ma 12 też.")
+
+st = Statement("Ala ma 12 też. A ja mam 5 kóz")
 # wyswietl wprowadzona wypowiedz
 st.display_statement()
 # normalizacja
@@ -74,3 +81,4 @@ st.statement_tokenize_to_sentence()
 st.sentence_tokenize_to_words()
 # jesli wystepuja liczby to zamien je na slowa
 st.number_to_word()
+st.word_to_periodic_word()
