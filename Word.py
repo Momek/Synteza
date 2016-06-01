@@ -15,7 +15,8 @@ class Word(object):
     def __init__(self, word):
         self.__tableF = []
         self.__tableD = []
-        self.__word = word.decode("utf-8")
+        self.__word = word
+        # self.__word = word.decode("utf-8")
         self.__dictionaryF = {'a': 'a', u'ą': 'an', 'b': 'b', 'c': 'c', u'ć': 'ci', 'd': 'd', 'e': 'e', u'ę': 'en',
                               'f': 'f', 'g': 'g', 'h': 'h', 'ch': 'h', 'i': 'i', 'j': 'j', 'k': 'k', 'l': 'l',
                               u'ł': 'll', 'm': 'm', 'n': 'n', u'ń': 'ni', 'o': 'o', u'ó': 'u', 'p': 'p', 'r': 'r',
@@ -181,9 +182,6 @@ class Word(object):
         if self.__tableF[len(self.__tableF) - 1] == "i" and self.__tableF[len(self.__tableF) - 2] == "i":
             self.__tableF.pop()
 
-            # Metody Mateusza
-            # Poniżej wklej swoje metody
-
     def asynchronous_pronunciation_nasal(self):
         __tab = list(self.__tableF)
         ann = "an" in __tab
@@ -292,28 +290,28 @@ class Word(object):
         px = PtAudio.Play(0)
         px.run(wave)
 
-    def create_table_diphone():
-        wrd.display_word()
-        wrd.phenom()
-        wrd.display_phenom()
-        wrd.double_i_on_end()
-        wrd.zmien_dzwiecznnosc()
-        wrd.syllable_with_i()
-        wrd.upodobnienia_postepowe()
-        wrd.display_phenom()
-        wrd.asynchronous_pronunciation_nasal()
-        wrd.display_phenom()
-        wrd.synchronous_pronunciation_nasal()
-        wrd.display_phenom()
-        wrd.softless()
-        wrd.denezalization()
-        wrd.change_to_diphone_word()
-        wrd.display_diphone()
-        wrd.complete_diphones()
+    # def create_table_diphone():
+    #     wrd.display_word()
+    #     wrd.phenom()
+    #     wrd.display_phenom()
+    #     wrd.double_i_on_end()
+    #     wrd.zmien_dzwiecznnosc()
+    #     wrd.syllable_with_i()
+    #     wrd.upodobnienia_postepowe()
+    #     wrd.display_phenom()
+    #     wrd.asynchronous_pronunciation_nasal()
+    #     wrd.display_phenom()
+    #     wrd.synchronous_pronunciation_nasal()
+    #     wrd.display_phenom()
+    #     wrd.softless()
+    #     wrd.denezalization()
+    #     wrd.change_to_diphone_word()
+    #     wrd.display_diphone()
+    #     wrd.complete_diphones()
+    #
+    # create_table_diphone = staticmethod(create_table_diphone)
 
-    create_table_diphone = staticmethod(create_table_diphone)
 
-
-wrd = Word('chrząszczbrzmiwtrzciniewszczebrzeszynie')
-wrd.create_table_diphone()
-wrd.text_to_speech()
+# wrd = Word('chrząszczbrzmiwtrzciniewszczebrzeszynie')
+# wrd.create_table_diphone()
+# wrd.text_to_speech()
