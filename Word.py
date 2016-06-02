@@ -25,7 +25,7 @@ class Word(object):
                               'cz': 'cz', 'sz': 'sz', '.': '_', ',': '.'}
         self.__dzwieczne = ['b', 'm', 'w', 'd', 'dz', 'z', 'n', 'zi', 'ni', 'drz', 'rz', 'r', 'g', 'a', 'an', 'o', 'e',
                             'en', 'y', 'i', 'u']
-        self.__bezdzwieczne = ['p', 'f', 't', 'c', 's', 'cz', 'sz', 'si', 'k', 'h']
+        self.__bezdzwieczne = ['p', 'f', 't', 'c', 's', 'cz', 'sz', 'k', 'h']       # dodac si
         self.__dz_bdz = {"b": "p", "dz": "c", "drz": "cz", "d": "t", "w": "f", "g": "k", "z": "s", "zi": "si",
                          "rz": "sz", "dzi": "ci"}
         self.__bdz_dz = {"p": "b", "c": "dz", "cz": "drz", "t": "d", "k": "g", "s": "z", "si": "zi", "ci": "dzi",
@@ -57,8 +57,15 @@ class Word(object):
             if k < (len(self.__word)):
                 x = word1[k] + word1[k + 1]
                 if x == 'ch' or x == 'cz' or x == 'dz' or x == u'dż' or x == u'dź' or x == 'rz' or x == 'sz':
-                    a = self.__dictionaryF[x]
-                    self.__tableF.append(a)
+                    if x + word1[k+2] == 'dzi':
+                        self.__tableF.append(x + word1[k+2])
+                        k += 2
+                    else:
+                        a = self.__dictionaryF[x]
+                        self.__tableF.append(a)
+                        k += 1
+                elif x == 'si' or x == 'ci' or x == 'ni' or x == 'zi':
+                    self.__tableF.append(x)
                     k += 1
                 else:
                     a = self.__dictionaryF[self.__word[k]]
@@ -129,7 +136,7 @@ class Word(object):
         length = len(self.__tableF)
         for i in range(length - 1):
             self.__tableD.append(self.__tableF[i] + "+" + self.__tableF[i + 1])
-        self.__tableD.append(self.__tableF[length - 1] + "+_")
+        # self.__tableD.append(self.__tableF[length - 1] + "+_")
 
     # Metody Karla
     # Poniżej wklej swoje metody
@@ -158,6 +165,7 @@ class Word(object):
                 if self.__tableF[i] == "dz":
                     if self.__tableF[i + 1] == "j":
                         self.__tableF[i] = "dzi"
+                        i += 1
         elif "z" in self.__tableF:
             for i in range(len(self.__tableF)):
                 if self.__tableF[i] == "z":
@@ -166,16 +174,25 @@ class Word(object):
                             self.__tableF[i] += "i"
                     elif self.__tableF[i + 1] == "i":
                         self.__tableF[i] = "zi"
+                        i += 1
         elif "c" in self.__tableF:
             for i in range(len(self.__tableF)):
                 if self.__tableF[i] == "c":
                     if self.__tableF[i + 1] == "i":
                         self.__tableF[i] = "ci"
+                        i += 1
         elif "s" in self.__tableF:
             for i in range(len(self.__tableF)):
                 if self.__tableF[i] == "s":
                     if self.__tableF[i + 1] == "i":
                         self.__tableF[i] = "si"
+                        i += 1
+        elif "n" in self.__tableF:
+            for i in range(len(self.__tableF)):
+                if self.__tableF[i] == "n":
+                    if self.__tableF[i + 1] == "i":
+                        self.__tableF[i] = "ni"
+                        i += 1
 
     def double_i_on_end(self):
         # obsluga podwojnego i na koncu wyrazu
