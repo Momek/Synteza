@@ -14,7 +14,6 @@ class Statement(object):
         self.__p_word = " "
         self.__flag_number = True
 
-
     def display_statement(self):
         print self.__statemnt
 
@@ -46,7 +45,7 @@ class Statement(object):
 
     def number_to_word(self):
         if not self.__flag_number:
-            j = 0;
+            j = 0
             while j < len(self.__tokenWords):
                 if not self.__tokenWords[j].isalpha():
                     num = self.__tokenWords[j]
@@ -63,7 +62,7 @@ class Statement(object):
                 j += 1
 
     def words_to_prosodic_word(self):
-        i = 1;
+        i = 1
         self.__p_word = self.__tokenWords[0]
         # print self.__p_word
         while i < len(self.__tokenWords):
@@ -71,7 +70,7 @@ class Statement(object):
             # print self.__p_word
             i += 1
 
-    def text_to_speach(self):
+    def tts(self):
         prosodic_word = word.Word(self.__p_word)
         prosodic_word.display_word()
         prosodic_word.phenom()
@@ -93,7 +92,8 @@ class Statement(object):
         prosodic_word.text_to_speech()
 
 
-st = Statement("Idzie Grześ Przez wieś Worek piasku niesie ")
+st = Statement("IDzie Grześ przez wieś worek piasku niesie. A przez dziurę piasek ciurem sypie się za Grzesiem. "
+               "A ola ma fana.")
 # wyswietl wprowadzona wypowiedz
 st.display_statement()
 # normalizacja
@@ -106,4 +106,4 @@ st.sentence_tokenize_to_words()
 # jesli wystepuja liczby to zamien je na slowa
 st.number_to_word()
 st.words_to_prosodic_word()
-st.text_to_speach()
+st.tts()
