@@ -259,44 +259,91 @@ class Word(object):
 
             # synteza, proste sklejanie wersja bardzo wstepna
 
+    # def complete_diphones(self):
+    #     # metoda tworząca difony w przypadku ich braku, np gdy nie ma difonu o+t tworzy o+_, _+t
+    #     # na sztywno wpisane reguly w przypadku gdy nie mozna stworzyc difonu,
+    #     # np z+_ zamieniane jest na _+z, tak samo dla w
+    #
+    #     diphonelist = open('confdata/diphonelist.txt', "r")
+    #     availablediphones = diphonelist.readlines()
+    #     diphonelist.close()
+    #
+    #     missingdiphones = {"z+_": "_+z", "z+.": "_+z", "w+_": "_+w", "w+.": "f+.", "g+.":"_+g"}
+    #     for x in range(len(availablediphones)):
+    #         availablediphones[x] = availablediphones[x].rstrip(
+    #             '\n')  # usuwanie białych znaków z zaczytanego pliku z difonami
+    #
+    #     for aa in range(len(self.__tableD)):
+    #         # pętla która działa dopóki wszystkie difony nie będą znane
+    #
+    #         while not (self.__tableD[aa] in availablediphones):
+    #             for i in range(len(self.__tableD)):
+    #                 if self.__tableD[i] in missingdiphones:
+    #                     self.__tableD[i] = missingdiphones[self.__tableD[i]]
+    #                 if not (self.__tableD[i] in availablediphones):
+    #                     print "Brak difonu " + self.__tableD[i] + " w bazie, uzupelniam"
+    #
+    #                     temp_word = self.__tableD[i]
+    #                     pindex = self.__tableD[i].index("+")
+    #                     if temp_word[0] == "_" and len(temp_word) > 3:
+    #                         new_diphone = ['_+' + temp_word[pindex + 1], temp_word[pindex + 2:len(temp_word)] + "+."]
+    #                     elif temp_word[len(temp_word) - 1] == "_":
+    #                         new_diphone = [temp_word[0] + '+.', '_+' + temp_word[1]]
+    #                     elif temp_word[len(temp_word) - 1] == ".":
+    #                         new_diphone = [temp_word[0] + '+.', '_+' + temp_word[1]]
+    #                     else:
+    #                         new_diphone = [temp_word[0:pindex] + '+.', '_+' + temp_word[pindex + 1:len(temp_word)]]
+    #                     print new_diphone
+    #                     self.__tableD.insert(i, new_diphone[0])
+    #                     self.__tableD.insert(i + 1, new_diphone[1])
+    #                     self.__tableD.remove(temp_word)
     def complete_diphones(self):
-        # metoda tworząca difony w przypadku ich braku, np gdy nie ma difonu o+t tworzy o+_, _+t
-        # na sztywno wpisane reguly w przypadku gdy nie mozna stworzyc difonu,
-        # np z+_ zamieniane jest na _+z, tak samo dla w
 
         diphonelist = open('confdata/diphonelist.txt', "r")
         availablediphones = diphonelist.readlines()
         diphonelist.close()
-
-        missingdiphones = {"z+_": "_+z", "z+.": "_+z", "w+_": "_+w", "w+.": "f+."}
         for x in range(len(availablediphones)):
-            availablediphones[x] = availablediphones[x].rstrip(
-                '\n')  # usuwanie białych znaków z zaczytanego pliku z difonami
+         availablediphones[x] = availablediphones[x].rstrip(
+                     '\n')
+        missingdiphones = {"z+_": "_+z", "z+.": "_+z", "w+_": "_+w", "w+.": "f+.", "g+.": "_+g", "g+_": "_+g", "d+_":"_+d"}
 
-        for aa in range(len(self.__tableD)):
-            # pętla która działa dopóki wszystkie difony nie będą znane
+        dlugosc = len(self.__tableD)
+        for x in range(dlugosc):
+            for i in self.__tableD:
+                index = self.__tableD.index(i)
+                if i in missingdiphones:
+                    newdiphone=missingdiphones[i]
+                    self.__tableD.insert(index, newdiphone)
+                    self.__tableD.remove(i)
+                    break
+                if not (i in availablediphones):
+                    print "Brak difonu " + i + " w bazie"
+                    pindex = i.index("+")
+                    if i[0] == "_" and len(i) > 3:
+                         newdiphone = ['_+' + i[pindex + 1], i[pindex + 2:len(i)] + "+."]
+                         self.__tableD.insert(index, newdiphone[0])
+                         self.__tableD.insert(index+1, newdiphone[1])
+                         self.__tableD.remove(i)
+                    elif i[0] == ".":
+                        newdiphone = ['_+' + i[pindex+1:len(i)]]
+                        self.__tableD.insert(index, newdiphone[0])
+                        self.__tableD.remove(i)
+                    elif i[len(i)-1] == "_" and len(i) > 3:
+                        newdiphone = ['_+' + i[0:pindex]]
+                        self.__tableD.insert(index, newdiphone[0])
+                        self.__tableD.remove(i)
+                    elif i[pindex + 1] == "_":
+                        newdiphone = ["_+" + i[0:pindex], i[pindex + 1:len(i)] + "+_"]
+                        self.__tableD.insert(index, newdiphone)
+                        self.__tableD.remove(i)
+                    else:
+                        newdiphone = [i[0:pindex] + "+_", "_+" + i[pindex + 1:len(i)]]
+                        self.__tableD.insert(index, newdiphone[0])
+                        self.__tableD.insert(index + 1, newdiphone[1])
+                        self.__tableD.remove(i)
+                    print newdiphone
+        print self.__tableD
 
-            while not (self.__tableD[aa] in availablediphones):
-                for i in range(len(self.__tableD)):
-                    if self.__tableD[i] in missingdiphones:
-                        self.__tableD[i] = missingdiphones[self.__tableD[i]]
-                    if not (self.__tableD[i] in availablediphones):
-                        print "Brak difonu " + self.__tableD[i] + " w bazie, uzupelniam"
-
-                        temp_word = self.__tableD[i]
-                        pindex = self.__tableD[i].index("+")
-                        if temp_word[0] == "_" and len(temp_word) > 3:
-                            new_diphone = ['_+' + temp_word[pindex + 1], temp_word[pindex + 2:len(temp_word)] + "+."]
-                        elif temp_word[len(temp_word) - 1] == "_":
-                            new_diphone = [temp_word[0] + '+.', '_+' + temp_word[1]]
-                        elif temp_word[len(temp_word) - 1] == ".":
-                            new_diphone = [temp_word[0] + '+.', '_+' + temp_word[1]]
-                        else:
-                            new_diphone = [temp_word[0:pindex] + '+.', '_+' + temp_word[pindex + 1:len(temp_word)]]
-                        print new_diphone
-                        self.__tableD.insert(i, new_diphone[0])
-                        self.__tableD.insert(i + 1, new_diphone[1])
-                        self.__tableD.remove(temp_word)
 
     def text_to_speech(self):
         length = len(self.__tableD)
@@ -306,6 +353,7 @@ class Word(object):
             wave = np.append(wave, x)
         px = PtAudio.Play(0)
         px.run(wave)
+
 
     # def create_table_diphone():
     #     wrd.display_word()
