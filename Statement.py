@@ -92,8 +92,12 @@ class Statement(object):
         prosodic_word.text_to_speech()
 
 
-st = Statement("IDzie Grześ przez wieś worek piasku niesie. A przez dziurę piasek ciurem sypie się za Grzesiem. "
-               "A ola ma fana.")
+st = Statement("Idzie Grześ Przez wieś, Worek piasku niesie, A przez dziurkę Piasek ciurkiem Sypie się za Grzesiem. "
+               "Piasku mniej Nosić lżej. Cieszy się głuptasek. Do dom wrócił,Worek zrzucił Ale gdzie ten piasek. "
+               "Wraca Grześ Przez wieś,Zbiera piasku ziarnka.Pomaluśku Zebrała się miarka.")
+# st = Statement("Zapraszamy na AKADEMICKIE FIRMOWE EWOLUCJE. Biznesplan to element planowania strategicznego. Wytycza "
+#                "cele, metody działania oraz pomaga dokonać właściwego wyboru spośród kilku wariantów inwestycyjnych.")
+#st =Statement("Ala ma 2 koty, a Ola 13 tego ma urodziny. One się lubią.")
 # wyswietl wprowadzona wypowiedz
 st.display_statement()
 # normalizacja
